@@ -1,0 +1,68 @@
+version: '3.9'
+
+services:
+  load-balancer-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: load-balancer-service
+    ports:
+      - "8090:8090"
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
+      - SPRING_CLOUD_DISCOVERY_CLIENT_SIMPLE_INSTANCES_USER_SERVICE_0_URI=http://user-service-1:80
+      - SPRING_CLOUD_DISCOVERY_CLIENT_SIMPLE_INSTANCES_USER_SERVICE_1_URI=http://user-service-2:80
+      - SPRING_CLOUD_DISCOVERY_CLIENT_SIMPLE_INSTANCES_PRODUCT_SERVICE_0_URI=http://product-service-1:80
+      - SPRING_CLOUD_DISCOVERY_CLIENT_SIMPLE_INSTANCES_PRODUCT_SERVICE_1_URI=http://product-service-2:80
+      - SPRING_CLOUD_DISCOVERY_CLIENT_SIMPLE_INSTANCES_ORDER_SERVICE_0_URI=http://order-service-1:80
+      - SPRING_CLOUD_DISCOVERY_CLIENT_SIMPLE_INSTANCES_ORDER_SERVICE_1_URI=http://order-service-2:80
+    depends_on:
+      - user-service-1
+      - user-service-2
+      - product-service-1
+      - product-service-2
+      - order-service-1
+      - order-service-2
+    networks:
+      - microservices-network
+
+  user-service-1:
+    image: traefik/whoami:latest
+    container_name: user-service-1
+    networks:
+      - microservices-network
+
+  user-service-2:
+    image: traefik/whoami:latest
+    container_name: user-service-2
+    networks:
+      - microservices-network
+
+  product-service-1:
+    image: traefik/whoami:latest
+    container_name: product-service-1
+    networks:
+      - microservices-network
+
+  product-service-2:
+    image: traefik/whoami:latest
+    container_name: product-service-2
+    networks:
+      - microservices-network
+
+  order-service-1:
+    image: traefik/whoami:latest
+    container_name: order-service-1
+    networks:
+      - microservices-network
+
+  order-service-2:
+    image: traefik/whoami:latest
+    container_name: order-service-2
+    networks:
+      - microservices-network
+
+networks:
+  microservices-network:
+    driver: bridge
+

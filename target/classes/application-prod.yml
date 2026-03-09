@@ -1,0 +1,22 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+  cloud:
+    config:
+      enabled: false
+      import-check:
+        enabled: false
+    gateway:
+      httpclient:
+        connect-timeout: 2000
+        response-timeout: 3s
+
+eureka:
+  client:
+    enabled: false
+
+logging:
+  level:
+    root: INFO
+    org.springframework.cloud.gateway: WARN
